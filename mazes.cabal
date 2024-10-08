@@ -9,14 +9,18 @@ common warnings
 executable mazes
     import:           warnings
     main-is:          Main.hs
-    -- other-modules:
+    other-modules:
+      Graph,
+      Random
     build-depends:
       array,
       base,
       containers,
       lens,
       mtl,
-      text
+      MonadRandom,
+      text,
+      vector,
     hs-source-dirs:   src
     default-language: GHC2021
     default-extensions:
