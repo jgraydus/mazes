@@ -11,11 +11,15 @@ executable mazes
     main-is:          Main.hs
     other-modules:
       Graph,
-      Random
+      Maze,
+      Random,
     build-depends:
       array,
       base,
       containers,
+      diagrams,
+      diagrams-lib,
+      diagrams-svg,
       lens,
       mtl,
       MonadRandom,
@@ -25,4 +29,6 @@ executable mazes
     default-language: GHC2021
     default-extensions:
       OverloadedRecordDot,
-      OverloadedStrings
+      OverloadedStrings,
+      TypeFamilies,
+
