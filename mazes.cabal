@@ -4,7 +4,7 @@ version:            0.1.0.0
 build-type:         Simple
 
 common warnings
-    ghc-options: -Wall
+    ghc-options: -Wall -Wno-ambiguous-fields
 
 executable mazes
     import:           warnings
@@ -28,6 +28,8 @@ executable mazes
     hs-source-dirs:   src
     default-language: GHC2021
     default-extensions:
+      DuplicateRecordFields,
+      NoFieldSelectors,
       OverloadedRecordDot,
       OverloadedStrings,
       TypeFamilies,

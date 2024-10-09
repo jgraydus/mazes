@@ -17,6 +17,10 @@ type Graph = Map Vertex IntSet
 emptyGraph :: Graph
 emptyGraph = Map.empty
 
+-- | every edge in the graph in unspecified order
+edges :: Graph -> [Edge]
+edges = concat . Map.mapWithKey (\k -> fmap (k,) . filter (>k) . IntSet.toList)
+
 -- | add a single vertex to the graph
 addVertex :: Vertex -> Graph -> Graph
 addVertex = Map.alter insert
