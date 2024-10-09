@@ -63,21 +63,21 @@ go = do
   next <- pop
   case next of
     Nothing -> pure ()
-    Just v@(from,to) -> do
+    Just e@(_, v) -> do
       visited <- use visitedL
-      when (IntSet.notMember to visited) $ do
-        graphL %= deleteEdge v
-        visit to
+      when (IntSet.notMember v visited) $ do
+        graphL %= deleteEdge e
+        visit v
         g <- use graphL
-        ns <- shuffle $ filter (flip IntSet.notMember visited) (neighbors to g)
-        push $ fmap (to,) ns
+        ns <- shuffle $ neighbors v g
+        push $ fmap (v,) ns
       go
 
 build :: MonadRandom m => Int -> Int -> m Graph
 build w h = do
   let g = squareGrid w h
   start <- getRandomR (0, w*h-1)
-  to <- fmap head <$> shuffle $ neighbors start g
-  s' <- flip execStateT (newS g) (visit start >> push [(start, to)] >> go)
+  to_ <- fmap head <$> shuffle $ neighbors start g
+  s' <- flip execStateT (newS g) (visit start >> push [(start, to_)] >> go)
   pure $ s'.graph
 
