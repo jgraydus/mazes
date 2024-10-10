@@ -16,7 +16,7 @@ data Maze = Maze
   { width :: Int
   , height :: Int
   , graph :: Graph
-  }
+  } deriving Show
 
 generateMaze :: (MonadRandom m, MonadWriter [Graph] m) => Int -> Int -> m Maze
 generateMaze w h = do

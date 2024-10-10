@@ -6,17 +6,25 @@ build-type:         Simple
 common warnings
     ghc-options: -Wall -Wno-ambiguous-fields
 
+common runtime
+    ghc-options:
+        -threaded
+        -rtsopts
+        -with-rtsopts=-N
+
 executable mazes
-    import:           warnings
+    import:           warnings, runtime
     main-is:          Main.hs
     other-modules:
       Graph,
       Maze,
       ProgramOptions,
       Random,
+      Raster,
       Render,
     build-depends:
       array,
+      async,
       base,
       bytestring,
       containers,
