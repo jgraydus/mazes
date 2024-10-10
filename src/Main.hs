@@ -18,7 +18,7 @@ run opts = do
       c = opts.mazeOpts.columns
       r = opts.mazeOpts.rows
 
-  let (m, fs) = flip evalRand gen $ runWriterT (generateMaze c r)
+  let (m, fs) = flip evalRand gen $ runWriterT (generateMaze Square c r)
 
       w = opts.renderOpts.width
       h = opts.renderOpts.height

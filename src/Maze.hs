@@ -1,5 +1,7 @@
 module Maze (
-    Maze(..), generateMaze
+    CellShape(..),
+    generateMaze,
+    Maze(..)
 ) where
 
 import Control.Lens
@@ -12,16 +14,20 @@ import Data.IntSet qualified as IntSet
 import Graph
 import Random (shuffle)
 
+data CellShape = Square | Hex
+  deriving Show
+
 data Maze = Maze
   { width :: Int
   , height :: Int
   , graph :: Graph
+  , cellShape :: CellShape
   } deriving Show
 
-generateMaze :: (MonadRandom m, MonadWriter [Graph] m) => Int -> Int -> m Maze
-generateMaze w h = do
-  g <- build w h
-  pure $ Maze { width = w, height = h, graph = g }
+generateMaze :: (MonadRandom m, MonadWriter [Graph] m) => CellShape -> Int -> Int -> m Maze
+generateMaze cellShape w h = do
+  g <- build cellShape w h
+  pure $ Maze { width = w, height = h, graph = g, cellShape }
 
 type VisitedSet = IntSet
 type Stack = [Edge]
@@ -80,11 +86,15 @@ go = do
         push $ fmap (v,) ns
       go
 
-build :: (MonadRandom m, MonadWriter [Graph] m) => Int -> Int -> m Graph
-build w h = do
-  let g = squareGrid w h
+build :: (MonadRandom m, MonadWriter [Graph] m) => CellShape -> Int -> Int -> m Graph
+build cellShape w h = do
+  let g = mkGrid cellShape w h
   start <- getRandomR (0, w*h-1)
   to_ <- fmap head <$> shuffle $ neighbors start g
   s' <- flip execStateT (newS g) (visit start >> push [(start, to_)] >> go)
   pure $ s'.graph
+
+mkGrid :: CellShape -> Int -> Int -> Graph
+mkGrid Square = squareGrid
+mkGrid Hex = error "not ready for hex grid yet"
 
