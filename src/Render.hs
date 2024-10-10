@@ -11,6 +11,7 @@ drawMaze m = innerWalls <> border
              & lw 3.0
              & lc black
              & lineCap LineCapRound
+             & bg white
              & center
              & pad 1.05
   where
