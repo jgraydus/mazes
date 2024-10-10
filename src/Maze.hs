@@ -3,6 +3,7 @@ module Maze (
 ) where
 
 import Control.Lens
+import Control.Monad (when)
 import Control.Monad.Random.Class (getRandomR, MonadRandom)
 import Control.Monad.State
 import Control.Monad.Writer.Class (MonadWriter, tell)
