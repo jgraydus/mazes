@@ -17,6 +17,10 @@ import Random (shuffle)
 data CellShape = Square | Hex
   deriving Show
 
+mkGrid :: CellShape -> Int -> Int -> Graph
+mkGrid Square = squareGrid
+mkGrid Hex = hexGrid
+
 data Maze = Maze
   { width :: Int
   , height :: Int
@@ -38,6 +42,9 @@ data S = S
   , graph :: Graph
   }
 
+newS :: Graph -> S
+newS g = S { visited = IntSet.empty, stack = [], graph = g }
+
 visitedL :: Lens' S VisitedSet
 visitedL f s = (\v -> s { visited = v }) <$> f s.visited
 
@@ -47,45 +54,6 @@ stackL f s = (\st -> s { stack = st }) <$> f s.stack
 graphL :: Lens' S Graph
 graphL f s = (\g -> s { graph = g } :: S) <$> f s.graph
 
-newS :: Graph -> S
-newS g = S { visited = IntSet.empty, stack = [], graph = g }
-
-type M m = (MonadRandom m, MonadState S m, MonadWriter [Graph] m)
-
-visit :: M m => Vertex -> m ()
-visit v = visitedL %= IntSet.insert v
-
-pop :: M m => m (Maybe Edge)
-pop = do
-  stack <- use stackL
-  case stack of
-    [] -> pure Nothing
-    (x:xs) -> stackL .= xs >> pure (Just x)
-
-push :: M m => [Edge] -> m ()
-push vs = stackL %= (vs <>)
-
-snapshot :: M m => m ()
-snapshot = do
-  g <- use graphL
-  tell [g]
-
-go :: M m => m ()
-go = do
-  next <- pop
-  case next of
-    Nothing -> pure ()
-    Just e@(_, v) -> do
-      visited <- use visitedL
-      when (IntSet.notMember v visited) $ do
-        graphL %= deleteEdge e
-        snapshot
-        visit v
-        g <- use graphL
-        ns <- shuffle $ neighbors v g
-        push $ fmap (v,) ns
-      go
-
 build :: (MonadRandom m, MonadWriter [Graph] m) => CellShape -> Int -> Int -> m Graph
 build cellShape w h = do
   let g = mkGrid cellShape w h
@@ -94,7 +62,38 @@ build cellShape w h = do
   s' <- flip execStateT (newS g) (visit start >> push [(start, to_)] >> go)
   pure $ s'.graph
 
-mkGrid :: CellShape -> Int -> Int -> Graph
-mkGrid Square = squareGrid
-mkGrid Hex = hexGrid
+  where
+    go :: (MonadRandom m, MonadState S m, MonadWriter [Graph] m) => m ()
+    go = do
+      next <- pop
+      case next of
+        Nothing -> pure ()
+        Just e@(_, v) -> do
+          visited <- use visitedL
+          when (IntSet.notMember v visited) $ do
+            graphL %= deleteEdge e
+            snapshot
+            visit v
+            g <- use graphL
+            ns <- shuffle $ neighbors v g
+            push $ fmap (v,) ns
+          go
+
+    visit :: MonadState S m => Vertex -> m ()
+    visit v = visitedL %= IntSet.insert v
+
+    push :: MonadState S m => [Edge] -> m ()
+    push vs = stackL %= (vs <>)
+
+    pop :: MonadState S m => m (Maybe Edge)
+    pop = do
+      stack <- use stackL
+      case stack of
+        [] -> pure Nothing
+        (x:xs) -> stackL .= xs >> pure (Just x)
+
+    snapshot :: (MonadState S m, MonadWriter [Graph] m) => m ()
+    snapshot = do
+      g <- use graphL
+      tell [g]
 

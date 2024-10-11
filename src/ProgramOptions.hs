@@ -83,4 +83,4 @@ programOptsParser = ProgramOpts <$> mazeOptsParser <*> renderOptsParser
 parseProgramOpts :: IO ProgramOpts
 parseProgramOpts = execParser $
   info programOptsParser (fullDesc <> progDesc "Generate mazes")
-    
+
