@@ -18,7 +18,7 @@ A program to generate mazes on square or hex grids.
 
 ### animation
 
-> cabal exec mazes -- -c 8 -r 8 -w 300
+> cabal exec mazes -- -c 8 -r 8 -w 300 -a
 
 ![animation example](https://github.com/jgraydus/mazes/blob/main/examples/animation.gif)
 
