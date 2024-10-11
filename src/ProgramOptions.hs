@@ -28,24 +28,24 @@ mazeOptsParser = MazeOpts <$>
   )
 
 data RenderOpts = RenderOpts
-  { width :: Double
-  , height :: Double
+  { width :: Maybe Double
+  , height :: Maybe Double
   , animate :: Bool
   , name :: String
   } deriving Show
 
 renderOptsParser :: Parser RenderOpts
 renderOptsParser = RenderOpts <$>
-  option auto
+  optional (option auto
   (  long "width"
   <> short 'w'
   <> help "The desired width of the output."
-  ) <*>
-  option auto
+  )) <*>
+  optional (option auto
   (  long "height"
   <> short 'h'
   <> help "The desired height of the output."
-  ) <*>
+  )) <*>
   switch
   (  long "animate"
   <> short 'a'

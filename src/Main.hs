@@ -18,11 +18,12 @@ run opts = do
       c = opts.mazeOpts.columns
       r = opts.mazeOpts.rows
 
-  let (m, fs) = flip evalRand gen $ runWriterT (generateMaze Square c r)
+  --let (m, fs) = flip evalRand gen $ runWriterT (generateMaze Square c r)
+  let (m, fs) = flip evalRand gen $ runWriterT (generateMaze Hex c r)
 
       w = opts.renderOpts.width
       h = opts.renderOpts.height
-      sizeSpec = mkSizeSpec2D (Just w) (Just h)
+      sizeSpec = mkSizeSpec2D w h
 
   if opts.renderOpts.animate
   then do

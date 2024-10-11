@@ -96,5 +96,5 @@ build cellShape w h = do
 
 mkGrid :: CellShape -> Int -> Int -> Graph
 mkGrid Square = squareGrid
-mkGrid Hex = error "not ready for hex grid yet"
+mkGrid Hex = hexGrid
 

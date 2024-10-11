@@ -86,14 +86,29 @@ hexGrid width height = addEdges es $ addVertices vs emptyGraph
     n = width * height 
     es = concatMap out vs
     out v = fmap (v,) (adj v)
-    adj v = catMaybes $ fmap ($ v) [upLeft, upRight, left, right, downLeft, downRight]
-    isEvenRow v = v `div` width `mod` 2 == 0
-    up v = let x = v - width in if x >= 0 then Just x else Nothing
-    down v = let x = v + width in if x < n then Just x else Nothing
-    left v = if v `mod` width > 0 then Just (v - 1) else Nothing
-    right v = if v`mod` width < width - 1 then Just (v + 1) else Nothing
-    upLeft v = if isEvenRow v then up v else up v >>= left
-    upRight v = upLeft v >>= right
-    downLeft v = if isEvenRow v then down v else down v >>= left
-    downRight v = downLeft v >>= right
+    adj v = catMaybes $ fmap ($ v) [upLeft, up, upRight, downLeft, down, downRight]
+
+    firstCol = 0
+    lastCol = width - 1
+    firstRow = 0
+    lastRow = height - 1
+
+    col v = v `mod` width
+    row v = v `div` width
+
+    isEven x = x `mod` 2 == 0
+
+    up' v = v - width
+    down' v = v + width
+
+    upLeft v = if row v == firstRow || col v == firstCol then Nothing
+               else if isEven (col v) then Just $ (up' v) - 1 else Just (v - 1)
+    up v = if row v == firstRow then Nothing else Just $ up' v
+    upRight v = if row v == firstRow || col v == lastCol then Nothing
+                else if isEven (col v) then Just $ up' v + 1 else Just (v + 1)
+    downLeft v = if row v == lastRow || col v == firstCol then Nothing
+                 else if isEven (col v) then Just (v - 1) else Just $ down' v - 1
+    down v = if row v == lastRow then Nothing else Just $ down' v
+    downRight v = if row v == lastRow || col v == lastCol then Nothing
+                  else if isEven (col v) then Just (v + 1) else Just $ down' v + 1
 
