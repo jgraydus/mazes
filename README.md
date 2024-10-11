@@ -1,6 +1,23 @@
 # mazes
 
-A program to generate mazes on square or hex grids.
+```
+> cabal exec mazes -- --help
+Usage: mazes [-c|--columns ARG] [-r|--rows ARG] [-s|--cellShape ARG] 
+             [-w|--width ARG] [-h|--height ARG] [-a|--animate] [-n|--name ARG]
+
+  Generate mazes
+
+Available options:
+  -c,--columns ARG         The number of columns of cells in the maze.
+  -r,--rows ARG            The number of rows of cells in the maze.
+  -s,--cellShape ARG       The type of maze grid. Values are 'square' and 'hex'.
+  -w,--width ARG           The desired width of the output.
+  -h,--height ARG          The desired height of the output.
+  -a,--animate             When set the output will be an animated gif
+                           demonstrating the construction of the maze.
+  -n,--name ARG            A name for the image. Used to name the output file.
+  -h,--help                Show this help text
+```
 
 ## examples
 
