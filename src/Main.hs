@@ -17,9 +17,9 @@ run opts = do
   let gen = mkStdGen 9874374
       c = opts.mazeOpts.columns
       r = opts.mazeOpts.rows
+      s = opts.mazeOpts.cellShape
 
-  --let (m, fs) = flip evalRand gen $ runWriterT (generateMaze Square c r)
-  let (m, fs) = flip evalRand gen $ runWriterT (generateMaze Hex c r)
+  let (m, fs) = flip evalRand gen $ runWriterT (generateMaze s c r)
 
       w = opts.renderOpts.width
       h = opts.renderOpts.height

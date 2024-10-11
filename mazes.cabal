@@ -45,6 +45,7 @@ executable mazes
     default-language: GHC2021
     default-extensions:
       DuplicateRecordFields,
+      LambdaCase,
       NoFieldSelectors,
       OverloadedRecordDot,
       OverloadedStrings,

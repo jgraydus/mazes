@@ -6,11 +6,19 @@ module ProgramOptions (
 ) where
 
 import Options.Applicative
+import Maze
 
 data MazeOpts = MazeOpts
   { columns :: Int
   , rows :: Int
+  , cellShape :: CellShape
   } deriving Show
+
+parseCellShape :: ReadM CellShape
+parseCellShape = eitherReader $ \case
+  "square" -> Right Square
+  "hex" -> Right Hex
+  _ -> Left "not a valid shape argument"
 
 mazeOptsParser :: Parser MazeOpts
 mazeOptsParser = MazeOpts <$>
@@ -25,6 +33,12 @@ mazeOptsParser = MazeOpts <$>
   <> short 'r'
   <> help "The number of rows of cells in the maze."
   <> value 10
+  ) <*>
+  option parseCellShape
+  (  long "cellShape"
+  <> short 's'
+  <> help "The type of maze grid. Values are 'square' and 'hex'."
+  <> value Square
   )
 
 data RenderOpts = RenderOpts

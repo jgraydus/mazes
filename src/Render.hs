@@ -113,6 +113,15 @@ drawHexMaze m = innerWalls <> border & styles
       then [bottomSeg p]
       else [bottomLeftSeg p, bottomSeg p, bottomRightSeg p]
 
+    leftBorder = mconcat $ do
+      i <- [r * m.width | r <- [0..m.height-1]]
+      let p = centerPoint_ $ coords_ i
+      [topLeftSeg p, bottomLeftSeg p]
 
-    border = topBorder <> bottomBorder
+    rightBorder = mconcat $ do
+      i <- [r * m.width - 1 | r <- [1..m.height]]
+      let p = centerPoint_ $ coords_ i
+      [topRightSeg p, bottomRightSeg p]
+
+    border = topBorder <> bottomBorder <> leftBorder <> rightBorder
 
