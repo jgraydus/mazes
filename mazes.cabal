@@ -49,5 +49,6 @@ executable mazes
       NoFieldSelectors,
       OverloadedRecordDot,
       OverloadedStrings,
+      Strict,
       TypeFamilies,
 
