@@ -1,7 +1,7 @@
 module Main where
 
 import Control.Concurrent.Async (mapConcurrently)
-import Control.Monad.Random.Strict (evalRand, mkStdGen)
+import Control.Monad.Random.Strict (evalRand, getStdGen, mkStdGen)
 import Control.Monad.Writer.Strict (runWriterT)
 import Diagrams.Prelude
 import Diagrams.Backend.Rasterific qualified as Rasterific
@@ -13,9 +13,11 @@ import Render
 
 run :: ProgramOpts -> IO ()
 run opts = do
+  gen <- case opts.seed of
+           Just s -> pure $ mkStdGen s
+           Nothing -> getStdGen
 
-  let gen = mkStdGen 9874374
-      c = opts.mazeOpts.columns
+  let c = opts.mazeOpts.columns
       r = opts.mazeOpts.rows
       s = opts.mazeOpts.cellShape
 

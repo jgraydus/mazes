@@ -72,13 +72,20 @@ renderOptsParser = RenderOpts <$>
   <> value "out"
   )
 
+seedParser :: Parser (Maybe Int)
+seedParser =
+  optional $ option auto
+  (  long "seed"
+  <> help "Seed for the random number generator" )
+
 data ProgramOpts = ProgramOpts
   { mazeOpts :: MazeOpts
   , renderOpts :: RenderOpts
+  , seed :: Maybe Int
   } deriving Show
 
 programOptsParser :: Parser ProgramOpts
-programOptsParser = ProgramOpts <$> mazeOptsParser <*> renderOptsParser
+programOptsParser = ProgramOpts <$> mazeOptsParser <*> renderOptsParser <*> seedParser
 
 parseProgramOpts :: IO ProgramOpts
 parseProgramOpts = execParser $
